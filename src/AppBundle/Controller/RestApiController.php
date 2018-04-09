@@ -2,18 +2,37 @@
 
 namespace AppBundle\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\HttpFoundation\Response;
+use FOS\RestBundle\Controller\FOSRestController;
 use FOS\RestBundle\Controller\Annotations as Rest;
 
-class RestApiController extends Controller
+class RestApiController extends FOSRestController
 {
 
     /**
-     * @Rest\Get("/api")
+     * @Rest\Post("/api-register")
      */
-    public function apiAction()
+    public function registerAction()
     {
-        return new Response('<html><body>Hello</body></html>');
+    }
+
+    /**
+     * @Rest\Put("/api-login")
+     */
+    public function loginAction()
+    {
+    }
+
+    /**
+     * @Rest\Post("/api-warning")
+     */
+    public function warningAction()
+    {
+    }
+
+    /**
+     * @Rest\Post("/api-feedback")
+     */
+    public function feedbackAction()
+    {
     }
 }
