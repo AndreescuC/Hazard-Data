@@ -4,6 +4,8 @@ namespace AppBundle\Controller;
 
 use FOS\RestBundle\Controller\FOSRestController;
 use FOS\RestBundle\Controller\Annotations as Rest;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
 
 class RestApiController extends FOSRestController
 {
@@ -11,8 +13,14 @@ class RestApiController extends FOSRestController
     /**
      * @Rest\Post("/api-register")
      */
-    public function registerAction()
+    public function registerAction(Request $request)
     {
+        if ($request->get('body')) {
+            $response = $request->get('body');
+        } else {
+            $response = "No param";
+        }
+        return new JsonResponse($response);
     }
 
     /**
