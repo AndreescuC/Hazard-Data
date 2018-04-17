@@ -25,13 +25,13 @@ class AdminUser
 
     /**
      * @var string
-     * @ORM\Column(type="string", name = "User Name")
+     * @ORM\Column(type="string", name = "username")
      */
     private $username;
 
     /**
      * @var string
-     * @ORM\Column(type="string", name = "Password")
+     * @ORM\Column(type="string", name = "password")
      */
     private $password;
 

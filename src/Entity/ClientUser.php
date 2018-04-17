@@ -10,6 +10,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 //TODO: add repo class
 /**
  * @ORM\Entity(repositoryClass="")
+ * @ORM\Table(name="client_user")
  */
 class ClientUser implements UserInterface, EquatableInterface
 {
