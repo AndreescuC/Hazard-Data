@@ -5,13 +5,23 @@ security:
     # https://symfony.com/doc/current/security.html#b-configuring-how-users-are-loaded
     providers:
         in_memory:
-            memory: ~
-
+            memory:
+                 users:
+                      ryan:
+                          password: ryanpass
+                          roles: 'ROLE_USER'
     firewalls:
         # disables authentication for assets and the profiler, adapt it according to your needs
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
+
+        secured_area:
+            pattern: ^/api
+            stateless: true
+            simple_preauth:
+                authenticator: app.security.apikey_authenticator
+            provider: in_memory
 
         main:
             anonymous: ~
@@ -22,3 +32,5 @@ security:
 
             # https://symfony.com/doc/current/security/form_login_setup.html
             #form_login: ~
+    access_control:
+            - { path: ^/api, roles: ROLE_API }
