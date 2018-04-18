@@ -6,3 +6,4 @@ vendor/
 web/bndles/
 app/config/parameters.yml
 web/bundles
+app/logs
