@@ -288,6 +288,15 @@ class ClientUser implements UserInterface, EquatableInterface
     }
 
     /**
+     * Erases apikey for the user
+     * Called after apikey expiration date or when the user logs in from a different device
+     */
+    public function eraseApiKey()
+    {
+        $this->userAPIKey = NULL;
+    }
+
+    /**
      * @param int $length
      * @param string $keyspace
      * @return string
