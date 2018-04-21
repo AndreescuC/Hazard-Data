@@ -75,7 +75,7 @@ class ClientUser implements UserInterface, EquatableInterface
     private $feedbacks;
 
     private $salt;
-    private $roles = [];
+    private $roles = ['ROLE_API'];
 
     /**
      * ClientUser security constructor.
@@ -84,12 +84,12 @@ class ClientUser implements UserInterface, EquatableInterface
      * @param string $salt
      * @param array $roles
      */
-    public function __construct(string $username, string $password, string $salt, array $roles = [])
+    public function __construct(string $username, string $password, string $salt, array $roles = ['ROLE_API'])
     {
         $this->username = $username;
         $this->password = $password;
         $this->roles = $roles;
-        $this->generateAndSetSalt();
+        $this->setSalt($this->generateSalt());
     }
 
     /**
@@ -292,7 +292,7 @@ class ClientUser implements UserInterface, EquatableInterface
      * @param string $keyspace
      * @return string
      */
-    public function generateAndSetSalt(
+    public function generateSalt(
         $length = 16,
         $keyspace = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'
     ) {
@@ -302,7 +302,7 @@ class ClientUser implements UserInterface, EquatableInterface
         for ($i = 0; $i < $length; ++$i) {
             $pieces []= $keyspace[random_int(0, $max)];
         }
-        $this->setSalt(implode('', $pieces));
+        return implode('', $pieces);
     }
 
 }
