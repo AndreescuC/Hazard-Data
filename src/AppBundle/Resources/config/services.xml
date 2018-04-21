@@ -10,5 +10,13 @@
 
     <services>
         <service id="app.security.apikey_authenticator" class="AppBundle\Security\ApiKeyAuthenticator" public="false" />
+        <service id="app.security.apikey_provider" class="AppBundle\Security\ApiKeyUserProvider" public="false" >
+            <call method="setClientUserService">
+                <argument type="service" id="app.service.client_user_service" />
+            </call>
+        </service>
+        <service id="app.service.client_user_service" class="AppBundle\Service\ClientUserService">
+            <argument type="service" id="doctrine"/>
+        </service>
     </services>
 </container>

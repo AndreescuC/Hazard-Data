@@ -38,6 +38,8 @@ class ApiKeyAuthenticator implements SimplePreAuthenticatorInterface
         return $token instanceof PreAuthenticatedToken && $token->getProviderKey() === $providerKey;
     }
 
+
+
     public function authenticateToken(TokenInterface $token, UserProviderInterface $userProvider, $providerKey)
     {
         if (!$userProvider instanceof ApiKeyUserProvider) {
@@ -53,7 +55,7 @@ class ApiKeyAuthenticator implements SimplePreAuthenticatorInterface
         $apiKey = $credentials['apikey'];
 
         $username = empty($apiKey)
-            ? $credentials['apikey']
+            ? $credentials['username']
             : $userProvider->getUsernameForApiKey($apiKey);
 
         if (!$username) {

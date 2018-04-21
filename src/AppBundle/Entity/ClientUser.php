@@ -9,7 +9,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 
 //TODO: add repo class
 /**
- * @ORM\Entity(repositoryClass="")
+ * @ORM\Entity(repositoryClass="AppBundle\Repository\ClientUserRepository")
  * @ORM\Table(name="client_user")
  */
 class ClientUser implements UserInterface, EquatableInterface
@@ -75,7 +75,7 @@ class ClientUser implements UserInterface, EquatableInterface
     private $feedbacks;
 
     private $salt;
-    private $roles;
+    private $roles = [];
 
     /**
      * ClientUser security constructor.
@@ -88,8 +88,8 @@ class ClientUser implements UserInterface, EquatableInterface
     {
         $this->username = $username;
         $this->password = $password;
-        $this->salt = $salt;
         $this->roles = $roles;
+        $this->generateAndSetSalt();
     }
 
     /**
@@ -176,6 +176,14 @@ class ClientUser implements UserInterface, EquatableInterface
     public function getSalt()
     {
         return $this->salt;
+    }
+
+    /**
+     * @param string $salt
+     */
+    private function setSalt(string $salt)
+    {
+        $this->salt = $salt;
     }
 
     /**
@@ -277,6 +285,24 @@ class ClientUser implements UserInterface, EquatableInterface
     public function eraseCredentials()
     {
         // TODO: Implement eraseCredentials() method.
+    }
+
+    /**
+     * @param int $length
+     * @param string $keyspace
+     * @return string
+     */
+    public function generateAndSetSalt(
+        $length = 16,
+        $keyspace = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'
+    ) {
+
+        $pieces = [];
+        $max = mb_strlen($keyspace, '8bit') - 1;
+        for ($i = 0; $i < $length; ++$i) {
+            $pieces []= $keyspace[random_int(0, $max)];
+        }
+        $this->setSalt(implode('', $pieces));
     }
 
 }
