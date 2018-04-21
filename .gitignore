@@ -7,3 +7,4 @@ web/bndles/
 app/config/parameters.yml
 web/bundles
 app/logs
+app/bootstrap.php.cache

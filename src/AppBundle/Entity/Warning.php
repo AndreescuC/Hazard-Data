@@ -23,6 +23,13 @@ class Warning
     static $POPULATION_HIGH = 3;
 
     /**
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="AUTO")
+     * @ORM\Column(type="integer", name="id")
+     */
+    private $id;
+
+    /**
      * @var Hazard
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Hazard", inversedBy="warnings")
      * @ORM\JoinColumn(name="hazard_type", referencedColumnName="id")
