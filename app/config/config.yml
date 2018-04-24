@@ -7,11 +7,9 @@ imports:
 # https://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
 parameters:
     locale: en
-    client_security:
-        api_key:
-            generation_min_value:
-            generation_max_value:
-            generation_max_attempts:
+    client_security.api_key.generation_min_value: 100000
+    client_security.api_key.generation_max_value: 200000
+    client_security.api_key.generation_max_attempts: 10000
 
 
 framework:

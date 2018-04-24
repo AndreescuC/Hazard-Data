@@ -119,13 +119,13 @@ class ClientUserService
             $user->setFirstName($data['first_name']);
         }
         if (isset($data['last_name'])) {
-            $user->setFirstName($data['last_name']);
+            $user->setLastName($data['last_name']);
         }
         if (isset($data['email'])) {
-            $user->setFirstName($data['email']);
+            $user->setEmail($data['email']);
         }
         if (isset($data['home_town'])) {
-            $user->setFirstName($data['home_town']);
+            $user->setHomeTown($data['home_town']);
         }
 
         $em = $this->getManager();
@@ -161,7 +161,7 @@ class ClientUserService
      * @param string $connection
      * @return ObjectManager
      */
-    public function getManager(string $connection = ''): ObjectManager
+    public function getManager(string $connection = NULL): ObjectManager
     {
         return $this->doctrine->getManager($connection);
     }

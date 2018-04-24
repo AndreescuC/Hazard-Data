@@ -13,7 +13,7 @@ class RestApiController extends FOSRestController
 {
 
     /**
-     * @Rest\Get("/api-register")
+     * @Rest\Post("/api-register")
      */
     public function registerAction(Request $request)
     {
@@ -40,7 +40,7 @@ class RestApiController extends FOSRestController
         foreach (['username', 'password', 'first_name', 'last_name', 'email', 'home_town'] as $item) {
             $userData[$item] = $request->get($item);
         }
-        if ($apiKey = $clientUserService->saveNewUser($userData)) {
+        if (!$apiKey = $clientUserService->saveNewUser($userData)) {
             return new Response(
                 'Register failed, we encountered some technical issues, we\'re working on it',
                 500,

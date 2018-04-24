@@ -302,7 +302,7 @@ class ClientUser implements UserInterface, EquatableInterface
      * @return string
      */
     public function generateSalt(
-        $length = 16,
+        $length = 22,
         $keyspace = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'
     ) {
 
