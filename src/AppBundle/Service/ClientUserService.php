@@ -66,6 +66,22 @@ class ClientUserService
     }
 
     /**
+     * @param array $credentials
+     * @return ClientUser|null
+     */
+    public function getUserByCredentials(array $credentials)
+    {
+        /** @var ClientUserRepository $clientUserRepo */
+        $clientUserRepo = $this->doctrine->getRepository(ClientUser::class);
+        /** @var ClientUser $user */
+        $user = $clientUserRepo->findOneBy(['username' => $credentials['username']]);
+        if (!$user) {
+            return NULL;
+        }
+        return password_verify($credentials['password'], $user->getPassword()) ? $user : NULL;
+    }
+
+    /**
      * @param ClientUser $user
      * @return string
      * @throws \ApiKeyGenerationException

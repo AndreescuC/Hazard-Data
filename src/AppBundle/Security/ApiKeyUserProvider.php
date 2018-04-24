@@ -34,6 +34,13 @@ class ApiKeyUserProvider implements UserProviderInterface
         return $user instanceof ClientUser ? $user->getUsername() : null;
     }
 
+    public function getUsernameForCredentials(array $credentials): ?string
+    {
+        /** @var ClientUser $user */
+        $user = $this->clientUserService->getUserByCredentials($credentials);
+        return $user instanceof ClientUser ? $user->getUsername() : null;
+    }
+
     /**
      * @param string $username
      * @return ClientUser
