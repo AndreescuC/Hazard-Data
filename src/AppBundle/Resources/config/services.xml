@@ -17,6 +17,9 @@
         </service>
         <service id="app.service.client_user_service" class="AppBundle\Service\ClientUserService">
             <argument type="service" id="doctrine"/>
+            <argument>%client_security.api_key.generation_min_value%</argument>
+            <argument>%client_security.api_key.generation_max_value%</argument>
+            <argument>%client_security.api_key.generation_max_attempts%</argument>
         </service>
     </services>
 </container>

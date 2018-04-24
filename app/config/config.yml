@@ -7,6 +7,12 @@ imports:
 # https://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
 parameters:
     locale: en
+    client_security:
+        api_key:
+            generation_min_value:
+            generation_max_value:
+            generation_max_attempts:
+
 
 framework:
     #esi: ~

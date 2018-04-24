@@ -84,12 +84,12 @@ class ClientUser implements UserInterface, EquatableInterface
      * @param string $salt
      * @param array $roles
      */
-    public function __construct(string $username, string $password, string $salt, array $roles = ['ROLE_API'])
+    public function __construct(string $username, string $password, string $salt = '', array $roles = ['ROLE_API'])
     {
         $this->username = $username;
-        $this->password = $password;
         $this->roles = $roles;
-        $this->setSalt($this->generateSalt());
+        $this->salt = empty($salt) ? $this->generateSalt() : $salt;
+        $this->password = password_hash($password, PASSWORD_BCRYPT, ['cost' => 12, 'salt' => $this->salt]);
     }
 
     /**

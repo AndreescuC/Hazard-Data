@@ -31,7 +31,7 @@ security:
             # https://symfony.com/doc/current/security/form_login_setup.html
             #form_login: ~
     access_control:
-            - { path: ^/api, roles: ROLE_API }
+            - { path: ^/api-login, roles: ROLE_API }
 
     encoders:
         AppBundle\Entity\ClientUser:

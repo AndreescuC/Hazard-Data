@@ -7,7 +7,6 @@ use Doctrine\ORM\QueryBuilder;
 
 class ClientUserRepository extends EntityRepository
 {
-
     /**
      * @return QueryBuilder
      */
