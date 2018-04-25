@@ -1,0 +1,46 @@
+<RestClientRequest>
+  <option name="biscuits">
+    <list>
+      <Biscuit>
+        <option name="date" value="-1" />
+        <option name="domain" value="" />
+        <option name="name" value="Cookie" />
+        <option name="path" value="" />
+        <option name="value" value="XDEBUG_SESSION=PHPSTORM" />
+      </Biscuit>
+    </list>
+  </option>
+  <option name="httpMethod" value="GET" />
+  <option name="urlBase" value="http://127.0.0.1:8000" />
+  <option name="urlPath" value="/api-login" />
+  <option name="headers">
+    <list>
+      <KeyValuePair>
+        <option name="key" value="Accept" />
+        <option name="value" value="*/*" />
+      </KeyValuePair>
+      <KeyValuePair>
+        <option name="key" value="Cache-Control" />
+        <option name="value" value="no-cache" />
+      </KeyValuePair>
+    </list>
+  </option>
+  <option name="parameters">
+    <list>
+      <KeyValuePair>
+        <option name="key" value="username" />
+        <option name="value" value="AndreescuC" />
+      </KeyValuePair>
+      <KeyValuePair>
+        <option name="key" value="password" />
+        <option name="value" value="cevaceva" />
+      </KeyValuePair>
+    </list>
+  </option>
+  <option name="parametersEnabled" value="true" />
+  <option name="haveTextToSend" value="false" />
+  <option name="haveFileToSend" value="false" />
+  <option name="isFileUpload" value="false" />
+  <option name="textToSend" value="" />
+  <option name="filesToSend" value="" />
+</RestClientRequest>

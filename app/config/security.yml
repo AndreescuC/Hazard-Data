@@ -4,12 +4,10 @@ security:
 
     # https://symfony.com/doc/current/security.html#b-configuring-how-users-are-loaded
     providers:
+        apikey_provider:
+            id: app.security.apikey_provider
         in_memory:
-            memory:
-                 users:
-                      ryan:
-                          password: ryanpass
-                          roles: 'ROLE_USER'
+            memory: ~
     firewalls:
         # disables authentication for assets and the profiler, adapt it according to your needs
         dev:
@@ -17,11 +15,11 @@ security:
             security: false
 
         secured_area:
-            pattern: ^/api
+            pattern: ^/api-login
             stateless: true
             simple_preauth:
                 authenticator: app.security.apikey_authenticator
-            provider: in_memory
+            provider: apikey_provider
 
         main:
             anonymous: ~
@@ -33,4 +31,9 @@ security:
             # https://symfony.com/doc/current/security/form_login_setup.html
             #form_login: ~
     access_control:
-            - { path: ^/api, roles: ROLE_API }
+            - { path: ^/api-login, roles: ROLE_API }
+
+    encoders:
+        AppBundle\Entity\ClientUser:
+            algorithm: bcrypt
+            cost: 12

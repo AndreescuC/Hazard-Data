@@ -9,7 +9,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 
 //TODO: add repo class
 /**
- * @ORM\Entity(repositoryClass="")
+ * @ORM\Entity(repositoryClass="AppBundle\Repository\ClientUserRepository")
  * @ORM\Table(name="client_user")
  */
 class ClientUser implements UserInterface, EquatableInterface
@@ -75,7 +75,7 @@ class ClientUser implements UserInterface, EquatableInterface
     private $feedbacks;
 
     private $salt;
-    private $roles;
+    private $roles = ['ROLE_API'];
 
     /**
      * ClientUser security constructor.
@@ -84,12 +84,12 @@ class ClientUser implements UserInterface, EquatableInterface
      * @param string $salt
      * @param array $roles
      */
-    public function __construct(string $username, string $password, string $salt, array $roles = [])
+    public function __construct(string $username, string $password, string $salt = '', array $roles = ['ROLE_API'])
     {
         $this->username = $username;
-        $this->password = $password;
-        $this->salt = $salt;
         $this->roles = $roles;
+        $this->salt = empty($salt) ? $this->generateSalt() : $salt;
+        $this->password = password_hash($password, PASSWORD_BCRYPT, ['cost' => 12, 'salt' => $this->salt]);
     }
 
     /**
@@ -176,6 +176,14 @@ class ClientUser implements UserInterface, EquatableInterface
     public function getSalt()
     {
         return $this->salt;
+    }
+
+    /**
+     * @param string $salt
+     */
+    private function setSalt(string $salt)
+    {
+        $this->salt = $salt;
     }
 
     /**
@@ -277,6 +285,33 @@ class ClientUser implements UserInterface, EquatableInterface
     public function eraseCredentials()
     {
         // TODO: Implement eraseCredentials() method.
+    }
+
+    /**
+     * Erases apikey for the user
+     * Called after apikey expiration date or when the user logs in from a different device
+     */
+    public function eraseApiKey()
+    {
+        $this->userAPIKey = NULL;
+    }
+
+    /**
+     * @param int $length
+     * @param string $keyspace
+     * @return string
+     */
+    public function generateSalt(
+        $length = 22,
+        $keyspace = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'
+    ) {
+
+        $pieces = [];
+        $max = mb_strlen($keyspace, '8bit') - 1;
+        for ($i = 0; $i < $length; ++$i) {
+            $pieces []= $keyspace[random_int(0, $max)];
+        }
+        return implode('', $pieces);
     }
 
 }

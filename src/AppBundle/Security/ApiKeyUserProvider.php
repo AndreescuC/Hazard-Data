@@ -1,11 +1,9 @@
 <?php
 
-/**
- * Created by PhpStorm.
- * User: constantin.andreescu
- * Date: 4/10/2018
- * Time: 1:50 PM
- */
+namespace AppBundle\Security;
+
+use AppBundle\Service\ClientUserService;
+use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
@@ -13,16 +11,34 @@ use AppBundle\Entity\ClientUser;
 
 class ApiKeyUserProvider implements UserProviderInterface
 {
+
+    /** @var  ClientUserService $clientUserService*/
+    private $clientUserService;
+
+    /**
+     * @param ClientUserService $clientUserService
+     */
+    public function setClientUserService(ClientUserService $clientUserService)
+    {
+        $this->clientUserService = $clientUserService;
+    }
+
     /**
      * @param string $apiKey
-     * @return string
+     * @return string|null
      */
-    public function getUsernameForApiKey($apiKey): string
+    public function getUsernameForApiKey(string $apiKey): ?string
     {
-        //TODO: query for username by apiKey
-        $username = 'John';
+        /** @var ClientUser $user */
+        $user = $this->clientUserService->getUserByApiKey($apiKey);
+        return $user instanceof ClientUser ? $user->getUsername() : null;
+    }
 
-        return $username;
+    public function getUsernameForCredentials(array $credentials): ?string
+    {
+        /** @var ClientUser $user */
+        $user = $this->clientUserService->getUserByCredentials($credentials);
+        return $user instanceof ClientUser ? $user->getUsername() : null;
     }
 
     /**
@@ -31,8 +47,10 @@ class ApiKeyUserProvider implements UserProviderInterface
      */
     public function loadUserByUsername($username): ClientUser
     {
-        //TODO: query for user by username
-        $user = new ClientUser($username, null, null);
+        $user = $this->clientUserService->getUserByUsername($username);
+        if (!$user instanceof ClientUser) {
+            throw new UsernameNotFoundException("No user found for username " . $username);
+        }
         return $user;
     }
 
