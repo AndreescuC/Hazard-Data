@@ -6,6 +6,10 @@ use AppBundle\Entity\DataProvider;
 
 abstract class DataHazardProvider
 {
+    const DEFAULT_PARAMETERS = [
+        '' => ''
+    ];
+
     /** @var DataProvider $providerEntiy */
     private $providerEntiy;
 

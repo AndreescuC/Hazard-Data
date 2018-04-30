@@ -21,5 +21,8 @@
             <argument>%client_security.api_key.generation_max_value%</argument>
             <argument>%client_security.api_key.generation_max_attempts%</argument>
         </service>
+        <service id="app.service.data_provider_service" class="AppBundle\Service\DataProviderService">
+            <argument>%kernel.root_dir%</argument>
+        </service>
     </services>
 </container>

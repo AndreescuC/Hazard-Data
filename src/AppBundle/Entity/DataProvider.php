@@ -31,6 +31,12 @@ class DataProvider
     private $name;
 
     /**
+     * @var string
+     * @ORM\Column(type="string", name="code")
+     */
+    private $code;
+
+    /**
      * @var int
      * @ORM\Column(type="integer", name="scope")
      */
@@ -64,6 +70,22 @@ class DataProvider
     public function setName(string $name)
     {
         $this->name = $name;
+    }
+
+    /**
+     * @return string
+     */
+    public function getCode(): string
+    {
+        return $this->code;
+    }
+
+    /**
+     * @param string $code
+     */
+    public function setCode(string $code)
+    {
+        $this->code = $code;
     }
 
     /**
