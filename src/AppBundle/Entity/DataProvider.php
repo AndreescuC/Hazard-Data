@@ -5,11 +5,14 @@ namespace AppBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="AppBundle\Repository\DataProviderRepository")
  * @ORM\Table(name="data_provider")
  */
 class DataProvider
 {
+
+    const STATUS_ACTIVE = 1;
+    const STATUS_INACTIVE = 2;
 
     const SCOPE_EARTHQUAKE = 1;
     const SCOPE_WEATHER = 2;
@@ -35,7 +38,7 @@ class DataProvider
 
     /**
      * @var string
-     * @ORM\Column(type="string", name="query_url")
+     * @ORM\Column(type="text", name="query_url")
      */
     private $queryURL;
 
