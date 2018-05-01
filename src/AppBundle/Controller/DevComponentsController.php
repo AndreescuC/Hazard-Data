@@ -80,5 +80,4 @@ class DevComponentsController extends Controller
     {
         return $this->render('niceAdminBootstrap/dev/blank.html');
     }
-
 }
