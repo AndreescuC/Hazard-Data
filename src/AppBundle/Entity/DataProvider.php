@@ -31,6 +31,12 @@ class DataProvider
     private $name;
 
     /**
+     * @var int
+     * @ORM\Column(type="integer", name="status")
+     */
+    private $status;
+
+    /**
      * @var string
      * @ORM\Column(type="string", name="code")
      */

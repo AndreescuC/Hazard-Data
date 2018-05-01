@@ -36,6 +36,7 @@ class QueryDataProvidersCommand extends ContainerAwareCommand
             if (!$provider) {
                 continue;
             }
+            $provider->setProviderEntity($providerEntity);
             if ($provider->setRequestParameters(DataHazardProvider::DEFAULT_PARAMETERS) && $provider->makeRequest()) {
                 array_merge($events, $provider->getFormattedEvents());
             }

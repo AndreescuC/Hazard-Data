@@ -30,6 +30,12 @@ class Warning
     private $id;
 
     /**
+     * @var integer
+     * @ORM\Column(type="integer", name="ext_id")
+     */
+    private $extId;
+
+    /**
      * @var Hazard
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Hazard", inversedBy="warnings")
      * @ORM\JoinColumn(name="hazard_type", referencedColumnName="id")
@@ -42,9 +48,14 @@ class Warning
     private $status;
 
     /**
-     * @ORM\Column(type="float", name="radius")
+     * @ORM\Column(type="float", name="location_lat")
      */
-    private $radius;
+    private $locationLat;
+
+    /**
+     * @ORM\Column(type="float", name="location_long")
+     */
+    private $locationLong;
 
     /**
      * @ORM\Column(type="integer", name="population")
@@ -63,19 +74,19 @@ class Warning
     private $feedbacks;
 
     /**
-     * @return string
+     * @return Hazard
      */
-    public function getHazardType()
+    public function getHazard()
     {
-        return $this->hazardType;
+        return $this->hazard;
     }
 
     /**
-     * @param string $hazardType
+     * @param Hazard $hazardType
      */
     public function setHazardType($hazardType)
     {
-        $this->hazardType = $hazardType;
+        $this->hazard = $hazardType;
     }
 
     /**

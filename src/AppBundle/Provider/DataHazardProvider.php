@@ -24,12 +24,9 @@ abstract class DataHazardProvider
 
     /**
      * DataHazardProvider constructor.
-     * @param DataProvider $entity
      */
-    public function __construct(DataProvider $entity)
+    public function __construct()
     {
-        $this->providerEntiy = $entity;
-        $this->query = $entity->getQueryURL();
         $this->responseAvailable = false;
     }
 
@@ -85,5 +82,30 @@ abstract class DataHazardProvider
         return NULL;
     }
 
+    /**
+     * @param DataProvider $entity
+     */
+    public function setProviderEntity(DataProvider $entity)
+    {
+        $this->providerEntiy = $entity;
+        $this->query = $entity->getQueryURL();
+    }
+
+    /**
+     * Format for array of events:
+     * [
+     *   'ext_id' => '',
+     *   'provider' => '',
+     *   'name' => '',
+     *   'type' => '',
+     *   'location' => [
+     *      'lat' => '',
+     *      'long' => ''
+     *   ],
+     *   'details' => []
+     * ]
+     *
+     * @return array|null
+     */
     public abstract function getFormattedEvents(): ?array;
 }
