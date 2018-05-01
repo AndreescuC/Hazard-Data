@@ -126,9 +126,9 @@ class ClientUserService
 
     /**
      * @param array $data
-     * @return bool
+     * @return int|null
      */
-    public function saveNewUser(array $data): bool
+    public function saveNewUser(array $data): ?int
     {
         $user = new ClientUser($data['username'], $data['password']);
         if (isset($data['first_name'])) {
@@ -155,7 +155,7 @@ class ClientUserService
 
             //TODO: log this somehow
             $em->detach($user);
-            return false;
+            return NULL;
         }
         return $apiKey;
     }
