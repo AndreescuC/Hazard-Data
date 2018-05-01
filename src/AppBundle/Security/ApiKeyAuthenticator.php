@@ -2,15 +2,17 @@
 
 namespace AppBundle\Security;
 
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Authentication\Token\PreAuthenticatedToken;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
-use Symfony\Component\Security\Core\Exception\CustomUserMessageAuthenticationException;
+use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Core\Exception\BadCredentialsException;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
+use Symfony\Component\Security\Http\Authentication\AuthenticationFailureHandlerInterface;
 use Symfony\Component\Security\Http\Authentication\SimplePreAuthenticatorInterface;
 
-class ApiKeyAuthenticator implements SimplePreAuthenticatorInterface
+class ApiKeyAuthenticator implements SimplePreAuthenticatorInterface, AuthenticationFailureHandlerInterface
 {
 
     public function createToken(Request $request, $providerKey)
@@ -39,7 +41,6 @@ class ApiKeyAuthenticator implements SimplePreAuthenticatorInterface
     }
 
 
-
     public function authenticateToken(TokenInterface $token, UserProviderInterface $userProvider, $providerKey)
     {
         if (!$userProvider instanceof ApiKeyUserProvider) {
@@ -60,12 +61,6 @@ class ApiKeyAuthenticator implements SimplePreAuthenticatorInterface
              ? $userProvider->getUsernameForApiKey($apiKey)
              : $userProvider->getUsernameForCredentials($credentials);
 
-        if (!$username) {
-            // feedback to the client
-            throw new CustomUserMessageAuthenticationException(
-                sprintf('API Key "%s" does not exist.', $apiKey)
-            );
-        }
         $user = $userProvider->loadUserByUsername($username);
 
         if (!$apiKey) {
@@ -79,4 +74,11 @@ class ApiKeyAuthenticator implements SimplePreAuthenticatorInterface
             $user->getRoles()
         );
     }
+
+    public function onAuthenticationFailure(Request $request, AuthenticationException $exception)
+    {
+        $responseData = ['status' => 1, 'reason' => $exception->getCode()];
+        return new JsonResponse($responseData);
+    }
+
 }
