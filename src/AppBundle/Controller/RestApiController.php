@@ -64,7 +64,7 @@ class RestApiController extends FOSRestController
             try {
                 $apikey = $user->getUserAPIKey() === NULL ? $clientUserService->refreshApiKeyForUser($user) : NULL;
                 $responseData = ['status' => 0];
-                if (!$apikey) {
+                if ($apikey) {
                     $responseData['apikey'] = $apikey;
                 }
                 return new JsonResponse($responseData);
