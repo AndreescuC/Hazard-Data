@@ -26,6 +26,12 @@ class Hazard
 
     /**
      * @var string
+     * @ORM\Column(type="string", name="name", unique=true)
+     */
+    private $name;
+
+    /**
+     * @var string
      * @ORM\Column(type="text", name="safety_measures")
      */
     private $safetyMeasures;
@@ -35,4 +41,6 @@ class Hazard
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\Warning", mappedBy="hazard")
      */
     private $warnings;
+
+
 }
