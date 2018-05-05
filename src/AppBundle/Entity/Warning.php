@@ -30,8 +30,8 @@ class Warning
     private $id;
 
     /**
-     * @var integer
-     * @ORM\Column(type="integer", name="ext_id")
+     * @var string
+     * @ORM\Column(type="string", name="ext_id")
      */
     private $extId;
 
@@ -74,23 +74,55 @@ class Warning
     private $feedbacks;
 
     /**
+     * @return mixed
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * @param mixed $id
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
+    }
+
+    /**
+     * @return string
+     */
+    public function getExtId(): string
+    {
+        return $this->extId;
+    }
+
+    /**
+     * @param string $extId
+     */
+    public function setExtId(string $extId)
+    {
+        $this->extId = $extId;
+    }
+
+    /**
      * @return Hazard
      */
-    public function getHazard()
+    public function getHazard(): Hazard
     {
         return $this->hazard;
     }
 
     /**
-     * @param Hazard $hazardType
+     * @param Hazard $hazard
      */
-    public function setHazardType($hazardType)
+    public function setHazard(Hazard $hazard)
     {
-        $this->hazard = $hazardType;
+        $this->hazard = $hazard;
     }
 
     /**
-     * @return string
+     * @return mixed
      */
     public function getStatus()
     {
@@ -98,7 +130,7 @@ class Warning
     }
 
     /**
-     * @param string $status
+     * @param mixed $status
      */
     public function setStatus($status)
     {
@@ -106,31 +138,47 @@ class Warning
     }
 
     /**
-     * @return float
+     * @return mixed
      */
-    public function getRadius()
+    public function getLocationLat()
     {
-        return $this->radius;
+        return $this->locationLat;
     }
 
     /**
-     * @param float $radius
+     * @param mixed $locationLat
      */
-    public function setRadius($radius)
+    public function setLocationLat($locationLat)
     {
-        $this->radius = $radius;
+        $this->locationLat = $locationLat;
     }
 
     /**
-     * @return integer
+     * @return mixed
      */
-    public function getPopulation()
+    public function getLocationLong()
+    {
+        return $this->locationLong;
+    }
+
+    /**
+     * @param mixed $locationLong
+     */
+    public function setLocationLong($locationLong)
+    {
+        $this->locationLong = $locationLong;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPopulation(): int
     {
         return $this->population;
     }
 
     /**
-     * @param integer $population
+     * @param mixed $population
      */
     public function setPopulation($population)
     {
@@ -138,7 +186,7 @@ class Warning
     }
 
     /**
-     * @return string
+     * @return mixed
      */
     public function getTrustLevel()
     {
@@ -146,12 +194,27 @@ class Warning
     }
 
     /**
-     * @param string $trustLevel
+     * @param mixed $trustLevel
      */
     public function setTrustLevel($trustLevel)
     {
         $this->trustLevel = $trustLevel;
     }
 
+    /**
+     * @return Feedback[]|ArrayCollection
+     */
+    public function getFeedbacks()
+    {
+        return $this->feedbacks;
+    }
+
+    /**
+     * @param Feedback[]|ArrayCollection $feedbacks
+     */
+    public function setFeedbacks($feedbacks): void
+    {
+        $this->feedbacks = $feedbacks;
+    }
 
 }

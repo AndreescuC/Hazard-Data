@@ -6,9 +6,7 @@ use AppBundle\Entity\DataProvider;
 
 abstract class DataHazardProvider
 {
-    const DEFAULT_PARAMETERS = [
-        '' => ''
-    ];
+    const DEFAULT_PARAMETERS = [];
 
     /** @var DataProvider $providerEntiy */
     private $providerEntiy;
@@ -16,7 +14,7 @@ abstract class DataHazardProvider
     /** @var string $query */
     private $query = NULL;
 
-    /** @var  array $responseData */
+    /** @var array $responseData */
     private $responseData = [];
 
     /** @var  bool $responseAvailable */
@@ -65,7 +63,7 @@ abstract class DataHazardProvider
         if (!$response) {
             return false;
         }
-        $this->responseData = json_decode($response);
+        $this->responseData = json_decode($response, true);
         $this->responseAvailable = true;
         return true;
     }
