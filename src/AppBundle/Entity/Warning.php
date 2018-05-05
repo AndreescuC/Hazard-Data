@@ -217,4 +217,13 @@ class Warning
         $this->feedbacks = $feedbacks;
     }
 
+    static function getPopulationValues()
+    {
+        return [
+            self::$POPULATION_LOW,
+            self::$POPULATION_MEDIUM,
+            self::$POPULATION_HIGH
+        ];
+    }
+
 }

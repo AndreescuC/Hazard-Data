@@ -12,6 +12,13 @@ use Symfony\Component\HttpFoundation\Request;
 class RestApiController extends FOSRestController
 {
 
+    const STATUS_SUCCESFULL = 0;
+    const STATUS_FAILED = 1;
+
+    const REASON_DUPLICATE_USERNAME = 0;
+    const REASON_INTERNAL_ERROR = 1000;
+    const REASON_BAD_REQUEST = 1001;
+
     /**
      * @Rest\Post("/api-register")
      */
@@ -21,8 +28,8 @@ class RestApiController extends FOSRestController
         $pass = $request->get('password');
         if (!is_string($username) || !is_string($pass)) {
             return new JsonResponse([
-                'status' => 1,
-                'reason' => 1000
+                'status' => self::STATUS_FAILED,
+                'reason' => self::REASON_BAD_REQUEST
             ]);
         }
 
@@ -30,8 +37,8 @@ class RestApiController extends FOSRestController
         $clientUserService = $this->get('app.service.client_user_service');
         if (!$clientUserService->validateRegisterRequest($username)) {
             return new JsonResponse([
-                'status' => 1,
-                'reason' => 0
+                'status' => self::STATUS_FAILED,
+                'reason' => self::REASON_DUPLICATE_USERNAME
             ]);
         }
         $userData = [];
@@ -40,12 +47,12 @@ class RestApiController extends FOSRestController
         }
         if (!$apiKey = $clientUserService->saveNewUser($userData)) {
             return new JsonResponse([
-                'status' => 1,
-                'reason' => 0
+                'status' => self::STATUS_FAILED,
+                'reason' => self::REASON_INTERNAL_ERROR
             ]);
         }
         return new JsonResponse([
-            'status' => 0,
+            'status' => self::STATUS_SUCCESFULL,
             'apikey' => $apiKey
         ]);
 
@@ -61,8 +68,11 @@ class RestApiController extends FOSRestController
             /** @var ClientUserService $clientUserService */
             $clientUserService = $this->get('app.service.client_user_service');
             try {
-                $apikey = $user->getUserAPIKey() === NULL ? $clientUserService->refreshApiKeyForUser($user) : NULL;
-                $responseData = ['status' => 0];
+                $apikey = $user->getUserAPIKey() === NULL
+                    ? $clientUserService->refreshApiKeyForUser($user)
+                    : NULL;
+
+                $responseData = ['status' => self::STATUS_SUCCESFULL];
                 if ($apikey) {
                     $responseData['apikey'] = $apikey;
                 }
@@ -70,23 +80,43 @@ class RestApiController extends FOSRestController
 
             } catch (\ApiKeyGenerationException $e) {
                 $this->get('doctrine')->getManager()->detach($user);
-                return new JsonResponse(['status' => 1, 'reason' => 1000]);
+                return new JsonResponse(['status' => self::STATUS_FAILED, 'reason' => self::REASON_INTERNAL_ERROR]);
             }
         }
-        return new JsonResponse(['status' => 1, 'reason' => 1000]);
+        return new JsonResponse(['status' => self::STATUS_FAILED, 'reason' => self::REASON_INTERNAL_ERROR]);
     }
 
     /**
      * @Rest\Post("/api-warning")
      */
-    public function warningAction()
+    public function warningAction(Request $request)
     {
-    }
+        $apikey = $request->headers->get('apikey');
+        $lat = $request->get('lat');
+        $long = $request->get('long');
 
-    /**
-     * @Rest\Post("/api-feedback")
-     */
-    public function feedbackAction()
-    {
+        if (!isset($apikey, $lat, $long)) {
+            return new JsonResponse([
+                'status' => self::STATUS_FAILED,
+                'reason' => self::REASON_BAD_REQUEST
+            ]);
+        }
+
+        $data = [
+            'sender_apikey' => $apikey,
+            'hazard' => [
+                'type' => $request->get('hazard'),
+                'population' => $request->get('population'),
+                'loc' => [
+                    'lat' => $lat,
+                    'long' => $long
+                ]
+            ]
+        ];
+
+        $response = $this->get('app.service.warning_service')->handleIncomingWarning($data)
+            ? ['status' => self::STATUS_SUCCESFULL]
+            : ['status' => self::STATUS_FAILED, 'reason' => self::REASON_BAD_REQUEST];
+        return new JsonResponse($response);
     }
 }

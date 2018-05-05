@@ -24,6 +24,7 @@
         <service id="app.service.data_provider_service" class="AppBundle\Service\DataProviderService"/>
         <service id="app.service.warning_service" class="AppBundle\Service\WarningService">
             <argument>%firebase.server_key%</argument>
+            <argument type="service" id="doctrine" />
         </service>
     </services>
 </container>
