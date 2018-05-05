@@ -9,7 +9,6 @@ use Doctrine\Common\Persistence\ObjectManager;
 
 class ClientUserService
 {
-
     static $RANDOM_GENERATOR_FAIL_CODE = 1001;
 
     /** @var ManagerRegistry $doctrine*/
