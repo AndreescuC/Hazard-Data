@@ -75,10 +75,7 @@ class ClientUserService
         $clientUserRepo = $this->doctrine->getRepository(ClientUser::class);
         /** @var ClientUser $user */
         $user = $clientUserRepo->findOneBy(['username' => $credentials['username']]);
-        if (!$user) {
-            return NULL;
-        }
-        return password_verify($credentials['password'], $user->getPassword()) ? $user : NULL;
+        return $user;
     }
 
     /**
@@ -126,9 +123,9 @@ class ClientUserService
 
     /**
      * @param array $data
-     * @return bool
+     * @return int|null
      */
-    public function saveNewUser(array $data): bool
+    public function saveNewUser(array $data): ?int
     {
         $user = new ClientUser($data['username'], $data['password']);
         if (isset($data['first_name'])) {
@@ -155,7 +152,7 @@ class ClientUserService
 
             //TODO: log this somehow
             $em->detach($user);
-            return false;
+            return NULL;
         }
         return $apiKey;
     }
