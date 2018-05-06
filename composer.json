@@ -26,11 +26,12 @@
         "nelmio/cors-bundle": "^1.5",
         "sensio/distribution-bundle": "~4.0",
         "sensio/framework-extra-bundle": "^3.0.2",
+        "sngrl/php-firebase-cloud-messaging": "dev-master",
+        "symfony/event-dispatcher": "^4.0",
         "symfony/monolog-bundle": "^3.0.2",
         "symfony/swiftmailer-bundle": "~2.3,>=2.3.10",
         "symfony/symfony": "2.8.*",
-        "twig/twig": "^1.0||^2.0",
-        "sngrl/php-firebase-cloud-messaging": "dev-master"
+        "twig/twig": "^1.0||^2.0"
     },
     "require-dev": {
         "sensio/generator-bundle": "~3.0",

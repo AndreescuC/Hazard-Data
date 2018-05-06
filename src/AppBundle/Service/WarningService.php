@@ -6,6 +6,8 @@ use AppBundle\Entity\AppConfig;
 use AppBundle\Entity\ClientUser;
 use AppBundle\Entity\Hazard;
 use AppBundle\Entity\Warning;
+use AppBundle\Event\WarningConfirmedEvent;
+use AppBundle\Event\WarningSubscriber;
 use AppBundle\Repository\ClientUserRepository;
 use AppBundle\Repository\WarningRepository;
 use Doctrine\Common\Persistence\ManagerRegistry;
@@ -13,6 +15,7 @@ use sngrl\PhpFirebaseCloudMessaging\Client;
 use sngrl\PhpFirebaseCloudMessaging\Message;
 use sngrl\PhpFirebaseCloudMessaging\Recipient\Device;
 use sngrl\PhpFirebaseCloudMessaging\Notification;
+use Symfony\Component\EventDispatcher\EventDispatcher;
 
 class WarningService
 {
@@ -53,10 +56,10 @@ class WarningService
         return true;
     }
 
-    public function broadcastWarning(Warning $warning, array $users, string $priority = 'high'): void
+    public function broadcastWarning(Warning $warning, array $users = [], string $priority = 'high'): void
     {
         if (empty($users)) {
-            return;
+            $users = $this->getEligibleUsers();
         }
 
         $client = $this->initializeFirebaseClient();
@@ -106,6 +109,13 @@ class WarningService
         return $client;
     }
 
+    private function getEligibleUsers(): array
+    {
+        return $this->getManager()->getRepository(ClientUser::class)->findAll([
+            'status' => ClientUser::STATUS_ACTIVE
+            ]);
+    }
+
     private function save(array $data): void
     {
         $warning = new Warning();
@@ -151,7 +161,14 @@ class WarningService
         foreach ($pendingWarnings as $pendingWarning) {
             $trustLevel += $pendingWarning->getTrustLevel();
             if ($trustLevel >= $trustThreshold) {
-                //TODO: dispatch event for changing status for all pending and trigger broadcasting warning
+                $event = new WarningConfirmedEvent();
+                $event->setConfirmedWarning($warning);
+                $event->setConfirmedWarningSiblings($pendingWarnings);
+
+                $dispatcher = new EventDispatcher();
+                $dispatcher->addSubscriber(new WarningSubscriber());
+                $dispatcher->dispatch($event);
+
                 return Warning::STATUS_CONFIRMED;
             }
         }
