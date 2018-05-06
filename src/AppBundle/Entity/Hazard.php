@@ -26,6 +26,12 @@ class Hazard
 
     /**
      * @var string
+     * @ORM\Column(type="string", name="name", unique=true)
+     */
+    private $name;
+
+    /**
+     * @var string
      * @ORM\Column(type="text", name="safety_measures")
      */
     private $safetyMeasures;
@@ -35,4 +41,61 @@ class Hazard
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\Warning", mappedBy="hazard")
      */
     private $warnings;
+
+    /**
+     * @return mixed
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * @return string
+     */
+    public function getName(): string
+    {
+        return $this->name;
+    }
+
+    /**
+     * @param string $name
+     */
+    public function setName(string $name)
+    {
+        $this->name = $name;
+    }
+
+    /**
+     * @return string
+     */
+    public function getSafetyMeasures(): string
+    {
+        return $this->safetyMeasures;
+    }
+
+    /**
+     * @param string $safetyMeasures
+     */
+    public function setSafetyMeasures(string $safetyMeasures)
+    {
+        $this->safetyMeasures = $safetyMeasures;
+    }
+
+    /**
+     * @return Warning[]|ArrayCollection
+     */
+    public function getWarnings()
+    {
+        return $this->warnings;
+    }
+
+    /**
+     * @param Warning[]|ArrayCollection $warnings
+     */
+    public function setWarnings($warnings)
+    {
+        $this->warnings = $warnings;
+    }
+
 }

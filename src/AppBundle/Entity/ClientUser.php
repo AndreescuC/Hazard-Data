@@ -7,7 +7,6 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\EquatableInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
-//TODO: add repo class
 /**
  * @ORM\Entity(repositoryClass="AppBundle\Repository\ClientUserRepository")
  * @ORM\Table(name="client_user")
@@ -68,6 +67,12 @@ class ClientUser implements UserInterface, EquatableInterface
      * @ORM\Column(type="string", name = "trust_level")
      */
     private $trustLevel;
+
+    /**
+     * @var string
+     * @ORM\Column(type="string", name = "firebase_token")
+     */
+    private $firebaseToken;
 
     /**
      * @var Feedback[] | ArrayCollection
@@ -248,6 +253,16 @@ class ClientUser implements UserInterface, EquatableInterface
     public function setTrustLevel(float $trustLevel)
     {
         $this->trustLevel = $trustLevel;
+    }
+
+    public function getFirebaseToken(): string
+    {
+        return $this->firebaseToken;
+    }
+
+    public function setFirebaseToken(string $firebaseToken)
+    {
+        $this->firebaseToken = $firebaseToken;
     }
 
     /**

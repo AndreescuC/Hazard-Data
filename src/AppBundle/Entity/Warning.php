@@ -30,6 +30,12 @@ class Warning
     private $id;
 
     /**
+     * @var string
+     * @ORM\Column(type="string", name="ext_id")
+     */
+    private $extId;
+
+    /**
      * @var Hazard
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Hazard", inversedBy="warnings")
      * @ORM\JoinColumn(name="hazard_type", referencedColumnName="id")
@@ -42,9 +48,14 @@ class Warning
     private $status;
 
     /**
-     * @ORM\Column(type="float", name="radius")
+     * @ORM\Column(type="float", name="location_lat")
      */
-    private $radius;
+    private $locationLat;
+
+    /**
+     * @ORM\Column(type="float", name="location_long")
+     */
+    private $locationLong;
 
     /**
      * @ORM\Column(type="integer", name="population")
@@ -63,23 +74,55 @@ class Warning
     private $feedbacks;
 
     /**
-     * @return string
+     * @return mixed
      */
-    public function getHazardType()
+    public function getId()
     {
-        return $this->hazardType;
+        return $this->id;
     }
 
     /**
-     * @param string $hazardType
+     * @param mixed $id
      */
-    public function setHazardType($hazardType)
+    public function setId($id)
     {
-        $this->hazardType = $hazardType;
+        $this->id = $id;
     }
 
     /**
      * @return string
+     */
+    public function getExtId(): string
+    {
+        return $this->extId;
+    }
+
+    /**
+     * @param string $extId
+     */
+    public function setExtId(string $extId)
+    {
+        $this->extId = $extId;
+    }
+
+    /**
+     * @return Hazard
+     */
+    public function getHazard(): Hazard
+    {
+        return $this->hazard;
+    }
+
+    /**
+     * @param Hazard $hazard
+     */
+    public function setHazard(Hazard $hazard)
+    {
+        $this->hazard = $hazard;
+    }
+
+    /**
+     * @return mixed
      */
     public function getStatus()
     {
@@ -87,7 +130,7 @@ class Warning
     }
 
     /**
-     * @param string $status
+     * @param mixed $status
      */
     public function setStatus($status)
     {
@@ -95,31 +138,47 @@ class Warning
     }
 
     /**
-     * @return float
+     * @return mixed
      */
-    public function getRadius()
+    public function getLocationLat()
     {
-        return $this->radius;
+        return $this->locationLat;
     }
 
     /**
-     * @param float $radius
+     * @param mixed $locationLat
      */
-    public function setRadius($radius)
+    public function setLocationLat($locationLat)
     {
-        $this->radius = $radius;
+        $this->locationLat = $locationLat;
     }
 
     /**
-     * @return integer
+     * @return mixed
      */
-    public function getPopulation()
+    public function getLocationLong()
+    {
+        return $this->locationLong;
+    }
+
+    /**
+     * @param mixed $locationLong
+     */
+    public function setLocationLong($locationLong)
+    {
+        $this->locationLong = $locationLong;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPopulation(): int
     {
         return $this->population;
     }
 
     /**
-     * @param integer $population
+     * @param mixed $population
      */
     public function setPopulation($population)
     {
@@ -127,7 +186,7 @@ class Warning
     }
 
     /**
-     * @return string
+     * @return mixed
      */
     public function getTrustLevel()
     {
@@ -135,12 +194,36 @@ class Warning
     }
 
     /**
-     * @param string $trustLevel
+     * @param mixed $trustLevel
      */
     public function setTrustLevel($trustLevel)
     {
         $this->trustLevel = $trustLevel;
     }
 
+    /**
+     * @return Feedback[]|ArrayCollection
+     */
+    public function getFeedbacks()
+    {
+        return $this->feedbacks;
+    }
+
+    /**
+     * @param Feedback[]|ArrayCollection $feedbacks
+     */
+    public function setFeedbacks($feedbacks): void
+    {
+        $this->feedbacks = $feedbacks;
+    }
+
+    static function getPopulationValues()
+    {
+        return [
+            self::$POPULATION_LOW,
+            self::$POPULATION_MEDIUM,
+            self::$POPULATION_HIGH
+        ];
+    }
 
 }
