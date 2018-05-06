@@ -2,10 +2,12 @@
 
 namespace AppBundle\Service;
 
+use AppBundle\Entity\AppConfig;
 use AppBundle\Entity\ClientUser;
 use AppBundle\Entity\Hazard;
 use AppBundle\Entity\Warning;
 use AppBundle\Repository\ClientUserRepository;
+use AppBundle\Repository\WarningRepository;
 use Doctrine\Common\Persistence\ManagerRegistry;
 use sngrl\PhpFirebaseCloudMessaging\Client;
 use sngrl\PhpFirebaseCloudMessaging\Message;
@@ -127,9 +129,58 @@ class WarningService
             }
         }
 
+        $warning->setStatus($this->resolveWarningStatus($warning));
+
         $em = $this->getManager();
         $em->persist($warning);
         $em->flush();
+    }
+
+    private function resolveWarningStatus(Warning $warning): int
+    {
+        $confirmedWarnings = $this->getWarningInstancesByStatus($warning, Warning::STATUS_CONFIRMED);
+        if (!empty($confirmedWarnings)) {
+            return Warning::STATUS_CONFIRMED;
+        }
+
+        $pendingWarnings = $this->getWarningInstancesByStatus($warning, Warning::STATUS_PENDING);
+        $trustThreshold = $this->appConfigService->getConfigByName(AppConfig::CONFIG_TRUST_THRESHOLD);
+        $trustLevel = $warning->getTrustLevel();
+
+        /** @var Warning $pendingWarning */
+        foreach ($pendingWarnings as $pendingWarning) {
+            $trustLevel += $pendingWarning->getTrustLevel();
+            if ($trustLevel >= $trustThreshold) {
+                //TODO: dispatch event for changing status for all pending and trigger broadcasting warning
+                return Warning::STATUS_CONFIRMED;
+            }
+        }
+        return Warning::STATUS_PENDING;
+    }
+
+    private function getWarningInstancesByStatus(Warning $warning, int $status): array
+    {
+        /** @var WarningRepository $repo */
+        $repo = $this->getManager()->getRepository(Warning::class);
+        $matchingWarnings = $repo->getEntriesByStatusAndHazard($warning->getHazard(), $status);
+
+        $radius = $this->appConfigService->getConfigByName(AppConfig::CONFIG_RADIUS);
+
+        $proximityWarnings = [];
+        /** @var Warning $matchingWarning */
+        foreach ($matchingWarnings as $matchingWarning) {
+            $distance = $this->appConfigService->computeHaversineGreatCircleDistance(
+                $warning->getLocationLat(),
+                $warning->getLocationLong(),
+                $matchingWarning->getLocationLat(),
+                $matchingWarning->getLocationLong()
+            );
+            if ($distance <= $radius) {
+                $proximityWarnings[] = $matchingWarning;
+            }
+        }
+
+        return $proximityWarnings;
     }
 
     private function getManager()
