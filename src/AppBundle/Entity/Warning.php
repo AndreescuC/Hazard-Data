@@ -1,13 +1,6 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: georgiana.besea
- * Date: 04/17/18
- * Time: 13:45
- */
 
 namespace AppBundle\Entity;
-
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
@@ -18,9 +11,13 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Warning
 {
-    static $POPULATION_LOW = 1;
-    static $POPULATION_MEDIUM = 2;
-    static $POPULATION_HIGH = 3;
+    const POPULATION_LOW = 1;
+    const POPULATION_MEDIUM = 2;
+    const POPULATION_HIGH = 3;
+
+    const STATUS_PENDING = 1;
+    const STATUS_CONFIRMED = 2;
+    const STATUS_DUPLICATED = 3;
 
     /**
      * @ORM\Id

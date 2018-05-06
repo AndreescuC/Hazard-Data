@@ -21,10 +21,13 @@ class WarningService
 
     private $doctrine;
 
-    public function __construct(string $serverKey, ManagerRegistry $doctrine)
+    private $appConfigService;
+
+    public function __construct(string $serverKey, ManagerRegistry $doctrine, AppConfigService $appConfigService)
     {
         $this->serverKey = $serverKey;
         $this->doctrine = $doctrine;
+        $this->appConfigService = $appConfigService;
     }
 
     public function handleIncomingWarning(array $data): bool
@@ -36,11 +39,12 @@ class WarningService
             return false;
         }
         $data['ext_id'] = 'user' . $user->getId();
+        $data['trust_level'] = $user->getTrustLevel();
 
         try {
             $this->save($data);
         } catch (\Exception $e) {
-            //TODO: log somehow...or do smth
+            //TODO: log this somehow...or do smth
             return false;
         }
 
@@ -104,6 +108,7 @@ class WarningService
     {
         $warning = new Warning();
         $warning->setExtId($data['ext_id']);
+        $warning->setTrustLevel($data['trust_level']);
         $warning->setLocationLat($data['hazard']['loc']['lat']);
         $warning->setLocationLong($data['hazard']['loc']['long']);
 
