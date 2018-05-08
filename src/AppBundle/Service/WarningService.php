@@ -19,8 +19,8 @@ use Symfony\Component\EventDispatcher\EventDispatcher;
 
 class WarningService
 {
-    static $notificationTitle = "%s Warning!";
-    static $notificationBody = "A new %s warning has been issued at coordinates [%f, %f]";
+    const NOTIFICATION_TITLE = "%s Warning!";
+    const NOTIFICATION_BODY = "A new %s warning has been issued at coordinates [%f, %f]";
 
     private $serverKey;
 
