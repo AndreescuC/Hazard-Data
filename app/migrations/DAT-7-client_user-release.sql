@@ -7,5 +7,7 @@ CREATE TABLE client_user(
 	last_name varchar(255),
 	email varchar(255),
 	home_town varchar(255),
-	trust_level varchar(255)
+	trust_level varchar(255),
+	firebase_token VARCHAR(255),
+	`status` INT
 );

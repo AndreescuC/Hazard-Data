@@ -14,6 +14,9 @@ use Symfony\Component\Security\Core\User\UserInterface;
 class ClientUser implements UserInterface, EquatableInterface
 {
 
+    const STATUS_ACTIVE = 1;
+    const STATUS_INACTIVE = 2;
+
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
@@ -73,6 +76,12 @@ class ClientUser implements UserInterface, EquatableInterface
      * @ORM\Column(type="string", name = "firebase_token")
      */
     private $firebaseToken;
+
+    /**
+     * @var int
+     * @ORM\Column(type="integer", name = "status")
+     */
+    private $status;
 
     /**
      * @var Feedback[] | ArrayCollection
@@ -287,6 +296,22 @@ class ClientUser implements UserInterface, EquatableInterface
     public function addFeedback($feedbacks)
     {
         $this->feedbacks = $feedbacks;
+    }
+
+    /**
+     * @return int
+     */
+    public function getStatus(): int
+    {
+        return $this->status;
+    }
+
+    /**
+     * @param int $status
+     */
+    public function setStatus(int $status): void
+    {
+        $this->status = $status;
     }
 
     public function isEqualTo(UserInterface $user)
