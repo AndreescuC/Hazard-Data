@@ -92,11 +92,8 @@ class RestApiController extends FOSRestController
     public function warningAction(Request $request)
     {
         $apikey = $request->headers->get('apikey');
-        $location = $request->get('location');
-        if (is_array($location)) {
-            $lat = $location['lat'];
-            $long = $location['long'];
-        }
+        $lat = $request->get('lat');
+        $long = $request->get('long');
 
         if (!isset($apikey, $lat, $long)) {
             return new JsonResponse([
@@ -121,7 +118,7 @@ class RestApiController extends FOSRestController
 
         $response = $this->get('app.service.warning_service')->handleIncomingWarning($data)
             ? ['status' => self::STATUS_SUCCESFULL]
-            : ['status' => self::STATUS_FAILED, 'reason' => self::REASON_BAD_REQUEST];
+            : ['status' => self::STATUS_FAILED, 'reason' => self::REASON_INTERNAL_ERROR];
         return new JsonResponse($response);
     }
 }

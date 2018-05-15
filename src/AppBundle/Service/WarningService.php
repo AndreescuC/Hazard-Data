@@ -141,12 +141,12 @@ class WarningService
 
         $gravity = $data['hazard']['population'];
         if (isset($gravity)) {
-            if ($gravity >= 0 && $gravity <= 4) {
-                $warning->setPopulation($population);
+            if (in_array($gravity, Warning::getGravityValues())) {
+                $warning->setGravity($gravity);
             }
         }
-
-        $warning->setStatus($this->resolveWarningStatus($warning));
+        //TODO: replace with $this->resolveWarningStatus($warning)
+        $warning->setStatus(Warning::STATUS_PENDING);
 
         $em = $this->getManager();
         $em->persist($warning);
