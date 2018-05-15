@@ -17,7 +17,11 @@ class Warning
 
     const STATUS_PENDING = 1;
     const STATUS_CONFIRMED = 2;
-    const STATUS_DUPLICATED = 3;
+    const STATUS_CONFIRMED_TRIGGER = 3;
+    const STATUS_DUPLICATED = 4;
+
+    const PROVIDER_TYPE_USER = 1;
+    const PROVIDER_TYPE_API = 2;
 
     /**
      * @ORM\Id
@@ -31,6 +35,12 @@ class Warning
      * @ORM\Column(type="string", name="ext_id")
      */
     private $extId;
+
+    /**
+     * @var int
+     * @ORM\Column(type="integer", name="provider_type")
+     */
+    private $providerType;
 
     /**
      * @var Hazard
@@ -63,6 +73,11 @@ class Warning
      * @ORM\Column(type="float", name="trust_level")
      */
     private $trustLevel;
+
+    /**
+     * @ORM\Column(type="datetime", name="date_created")
+     */
+    private $dateCreated;
 
     /**
      * @var Feedback[] | ArrayCollection
@@ -199,6 +214,22 @@ class Warning
     }
 
     /**
+     * @return mixed
+     */
+    public function getDateCreated()
+    {
+        return $this->dateCreated;
+    }
+
+    /**
+     * @param mixed $dateCreated
+     */
+    public function setDateCreated($dateCreated)
+    {
+        $this->dateCreated = $dateCreated;
+    }
+
+    /**
      * @return Feedback[]|ArrayCollection
      */
     public function getFeedbacks()
@@ -217,9 +248,9 @@ class Warning
     static function getPopulationValues()
     {
         return [
-            self::$POPULATION_LOW,
-            self::$POPULATION_MEDIUM,
-            self::$POPULATION_HIGH
+            self::POPULATION_LOW,
+            self::POPULATION_MEDIUM,
+            self::POPULATION_HIGH
         ];
     }
 

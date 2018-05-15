@@ -37,6 +37,28 @@ class WarningRepository extends EntityRepository
         return $qb->getQuery()->getResult();
     }
 
+    public function countUserConfirmedWarnings(): int
+    {
+        $qb = $this->getQueryBuilder()
+            ->select('count(w.id)')
+            ->where('w.status IN (:confirmed)')
+            ->setParameter('confirmed', [Warning::STATUS_CONFIRMED_TRIGGER, Warning::STATUS_CONFIRMED]);
+
+        return $qb->getQuery()->getSingleScalarResult();
+    }
+
+    public function countUserWarningsByTimeFrame(\DateTime $after, \DateTime $before = NULL): int
+    {
+        $qb = $this->getQueryBuilder()
+            ->select('count(w.id)')
+            ->where('w.dateCreated > :after')
+            ->andWhere('w.dateCreated < :before')
+            ->andWhere('w.extId like "%"')
+            ->setParameter('after', $after)
+            ->setParameter('before', !is_null($before) ?: new \DateTime());
+        return $qb->getQuery()->getSingleScalarResult();
+    }
+
     /**
      * @return QueryBuilder
      */

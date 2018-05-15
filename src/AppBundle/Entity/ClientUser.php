@@ -4,6 +4,7 @@ namespace AppBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
 use Symfony\Component\Security\Core\User\EquatableInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
@@ -52,6 +53,14 @@ class ClientUser implements UserInterface, EquatableInterface
      * @ORM\Column(type="string", name = "last_name")
      */
     private $lastName;
+
+    /**
+     * @var \DateTime
+     *
+     * @Gedmo\Timestampable(on="create")
+     * @ORM\Column(name="created", type="datetime")
+     */
+    private $registerDate;
 
     /**
      * @var string
@@ -166,6 +175,14 @@ class ClientUser implements UserInterface, EquatableInterface
     {
         $this->lastName = $lastName;
         return $this;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getRegisterDate(): \DateTime
+    {
+        return $this->registerDate;
     }
 
     /**

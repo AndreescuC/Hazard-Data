@@ -68,7 +68,7 @@
           <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">
             <div class="info-box blue-bg">
               <i class="fa fa-cloud-download"></i>
-              <div class="count">-999</div>
+              <div class="count">{{ statistics.cumulative.registered_users }}</div>
               <div class="title">Registered Users</div>
             </div>
             <!--/.info-box-->
@@ -78,7 +78,7 @@
           <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">
             <div class="info-box brown-bg">
               <i class="fa fa-shopping-cart"></i>
-              <div class="count"> -999 </div>
+              <div class="count">{{ statistics.cumulative.active_users }}</div>
               <div class="title">Active Users</div>
             </div>
             <!--/.info-box-->
@@ -88,7 +88,7 @@
           <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">
             <div class="info-box dark-bg">
               <i class="fa fa-thumbs-o-up"></i>
-              <div class="count">-999</div>
+              <div class="count">{{ statistics.cumulative.user_confirmed_warnings }}</div>
               <div class="title">User Confirmed Warnings</div>
             </div>
             <!--/.info-box-->
@@ -98,7 +98,7 @@
           <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">
             <div class="info-box green-bg">
               <i class="fa fa-cubes"></i>
-              <div class="count">-999</div>
+              <div class="count">{{ statistics.cumulative.api_confirmed_warnings }}</div>
               <div class="title">API Confirmed Warnings</div>
             </div>
             <!--/.info-box-->
@@ -135,23 +135,23 @@
                 <!-- Graph -->
                 <div><span id="todayspark1" class="spark"></span></div>
                 <!-- Text -->
-                <div class="datas-text">-99 new users</div>
+                <div class="datas-text">{{ statistics.weekly.new_users }} new users</div>
               </li>
               <li>
                 <div><span id="todayspark2" class="spark"></span></div>
-                <div class="datas-text">-99 logins</div>
+                <div class="datas-text">{{ statistics.weekly.logins }} logins</div>
               </li>
               <li>
                 <div><span id="todayspark3" class="spark"></span></div>
-                <div class="datas-text">-99 user warnings</div>
+                <div class="datas-text">{{ statistics.weekly.user_warnings }} user warnings</div>
               </li>
               <li>
                 <div><span id="todayspark4" class="spark"></span></div>
-                <div class="datas-text">-99 confirmed user warnings</div>
+                <div class="datas-text">{{ statistics.weekly.confirmed_user_warnings }} confirmed user warnings</div>
               </li>
               <li>
                 <div><span id="todayspark5" class="spark"></span></div>
-                <div class="datas-text">10% warnings honesty</div>
+                <div class="datas-text">{{ statistics.weekly.warnings_honesty }}% warning honesty</div>
               </li>
             </ul>
           </div>

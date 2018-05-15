@@ -5,6 +5,7 @@ CREATE TABLE client_user(
 	user_apikey varchar(255),
 	first_name varchar(255),
 	last_name varchar(255),
+	register_date DATETIME,
 	email varchar(255),
 	home_town varchar(255),
 	trust_level varchar(255),

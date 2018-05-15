@@ -30,12 +30,13 @@ class WarningSubscriber implements EventSubscriberInterface
     public function onWarningConfirmation(WarningConfirmedEvent $event): void
     {
         $warnings = $event->getConfirmedWarningSiblings();
-        $warnings[] = $event->getConfirmedWarning();
+        $triggerWarning = $event->getConfirmedWarning();
         /** @var WarningRepository $repo */
         $repo = $this->doctrine->getRepository(Warning::class);
         $repo->updateStatus($warnings, Warning::STATUS_CONFIRMED);
+        $repo->updateStatus([$triggerWarning], Warning::STATUS_CONFIRMED_TRIGGER);
 
-        $this->warningService->broadcastWarning($event->getConfirmedWarning());
+        $this->warningService->broadcastWarning($triggerWarning);
     }
 
 }

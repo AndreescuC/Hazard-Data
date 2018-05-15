@@ -2,6 +2,7 @@
 
 namespace AppBundle\Controller;
 
+use AppBundle\Service\ClientUserService;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
@@ -13,7 +14,12 @@ class DefaultController extends Controller
      */
     public function indexAction(Request $request)
     {
-        return $this->render('niceAdminBootstrap/index.twig');
+        /** @var ClientUserService $userClientService */
+        $statisticsService = $this->get('app.service.statistics_service');
+
+        return $this->render('niceAdminBootstrap/index.twig', [
+            'statistics' => $statisticsService->getDashboardStatistics()
+        ]);
     }
 
     /**
