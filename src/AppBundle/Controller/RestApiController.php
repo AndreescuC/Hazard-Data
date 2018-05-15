@@ -92,8 +92,11 @@ class RestApiController extends FOSRestController
     public function warningAction(Request $request)
     {
         $apikey = $request->headers->get('apikey');
-        $lat = $request->get('lat');
-        $long = $request->get('long');
+        $location = $request->get('location');
+        if (is_array($location)) {
+            $lat = $location['lat'];
+            $long = $location['long'];
+        }
 
         if (!isset($apikey, $lat, $long)) {
             return new JsonResponse([
@@ -104,13 +107,15 @@ class RestApiController extends FOSRestController
 
         $data = [
             'sender_apikey' => $apikey,
+            'ext_id' => $request->get('id'),
             'hazard' => [
                 'type' => $request->get('hazard'),
                 'population' => $request->get('population'),
                 'loc' => [
                     'lat' => $lat,
                     'long' => $long
-                ]
+                ],
+                'gravity' => $request->get('gravity')
             ]
         ];
 

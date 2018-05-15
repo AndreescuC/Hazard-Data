@@ -43,7 +43,7 @@ class WarningService
         if (!$user instanceof ClientUser) {
             return false;
         }
-        $data['ext_id'] = 'user' . $user->getId();
+        $data['ext_id'] = 'user' . $user->getId() . '-' . $data['ext_id'];
         $data['trust_level'] = $user->getTrustLevel();
 
         try {
@@ -135,6 +135,13 @@ class WarningService
         $population = $data['hazard']['population'];
         if (isset($population)) {
             if (in_array($population, Warning::getPopulationValues())) {
+                $warning->setPopulation($population);
+            }
+        }
+
+        $gravity = $data['hazard']['population'];
+        if (isset($gravity)) {
+            if ($gravity >= 0 && $gravity <= 4) {
                 $warning->setPopulation($population);
             }
         }
