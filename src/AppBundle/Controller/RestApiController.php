@@ -104,19 +104,21 @@ class RestApiController extends FOSRestController
 
         $data = [
             'sender_apikey' => $apikey,
+            'ext_id' => $request->get('id'),
             'hazard' => [
                 'type' => $request->get('hazard'),
                 'population' => $request->get('population'),
                 'loc' => [
                     'lat' => $lat,
                     'long' => $long
-                ]
+                ],
+                'gravity' => $request->get('gravity')
             ]
         ];
 
         $response = $this->get('app.service.warning_service')->handleIncomingWarning($data)
             ? ['status' => self::STATUS_SUCCESFULL]
-            : ['status' => self::STATUS_FAILED, 'reason' => self::REASON_BAD_REQUEST];
+            : ['status' => self::STATUS_FAILED, 'reason' => self::REASON_INTERNAL_ERROR];
         return new JsonResponse($response);
     }
 }

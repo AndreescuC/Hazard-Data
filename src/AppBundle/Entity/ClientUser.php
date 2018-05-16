@@ -9,6 +9,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * @ORM\Entity(repositoryClass="AppBundle\Repository\ClientUserRepository")
+ * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="client_user")
  */
 class ClientUser implements UserInterface, EquatableInterface
@@ -52,6 +53,13 @@ class ClientUser implements UserInterface, EquatableInterface
      * @ORM\Column(type="string", name = "last_name")
      */
     private $lastName;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="register_date", type="datetime")
+     */
+    private $registerDate;
 
     /**
      * @var string
@@ -104,6 +112,8 @@ class ClientUser implements UserInterface, EquatableInterface
         $this->roles = $roles;
         $this->salt = empty($salt) ? $this->generateSalt() : $salt;
         $this->password = password_hash($password, PASSWORD_BCRYPT, ['cost' => 12, 'salt' => $this->salt]);
+
+        $this->setTrustLevel(100);
     }
 
     /**
@@ -166,6 +176,22 @@ class ClientUser implements UserInterface, EquatableInterface
     {
         $this->lastName = $lastName;
         return $this;
+    }
+
+    /**
+     * @param \DateTime $registerDate
+     */
+    public function setRegisterDate(\DateTime $registerDate)
+    {
+        $this->registerDate = $registerDate;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getRegisterDate(): \DateTime
+    {
+        return $this->registerDate;
     }
 
     /**

@@ -43,7 +43,7 @@ class WarningService
         if (!$user instanceof ClientUser) {
             return false;
         }
-        $data['ext_id'] = 'user' . $user->getId();
+        $data['ext_id'] = 'user' . $user->getId() . '-' . $data['ext_id'];
         $data['trust_level'] = $user->getTrustLevel();
 
         try {
@@ -82,8 +82,8 @@ class WarningService
         $message = new Message();
 
         $hazardName = $warning->getHazard()->getName();
-        $title = sprintf(self::$notificationTitle, $hazardName);
-        $body = sprintf(self::$notificationTitle, $hazardName,
+        $title = sprintf(self::NOTIFICATION_TITLE, $hazardName);
+        $body = sprintf(self::NOTIFICATION_BODY, $hazardName,
             $warning->getLocationLat(), $warning->getLocationLong());
 
         $data = [
@@ -139,7 +139,14 @@ class WarningService
             }
         }
 
-        $warning->setStatus($this->resolveWarningStatus($warning));
+        $gravity = $data['hazard']['population'];
+        if (isset($gravity)) {
+            if (in_array($gravity, Warning::getGravityValues())) {
+                $warning->setGravity($gravity);
+            }
+        }
+        //TODO: replace with $this->resolveWarningStatus($warning)
+        $warning->setStatus(Warning::STATUS_PENDING);
 
         $em = $this->getManager();
         $em->persist($warning);
@@ -166,7 +173,7 @@ class WarningService
                 $event->setConfirmedWarningSiblings($pendingWarnings);
 
                 $dispatcher = new EventDispatcher();
-                $dispatcher->addSubscriber(new WarningSubscriber());
+                $dispatcher->addSubscriber(new WarningSubscriber($this->doctrine, $this));
                 $dispatcher->dispatch($event);
 
                 return Warning::STATUS_CONFIRMED;
