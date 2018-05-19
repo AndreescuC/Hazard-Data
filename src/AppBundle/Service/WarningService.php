@@ -146,7 +146,7 @@ class WarningService
             }
         }
         //TODO: replace with $this->resolveWarningStatus($warning)
-        $warning->setStatus(Warning::STATUS_PENDING);
+        $warning->setStatus($this->resolveWarningStatus($warning));
 
         $em = $this->getManager();
         $em->persist($warning);

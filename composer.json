@@ -31,7 +31,8 @@
         "symfony/monolog-bundle": "^3.0.2",
         "symfony/swiftmailer-bundle": "~2.3,>=2.3.10",
         "symfony/symfony": "2.8.*",
-        "twig/twig": "^1.0||^2.0"
+        "twig/twig": "^1.0||^2.0",
+        "sngrl/php-firebase-cloud-messaging": "dev-master"
     },
     "require-dev": {
         "sensio/generator-bundle": "~3.0",
