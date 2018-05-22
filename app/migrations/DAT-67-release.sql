@@ -3,6 +3,6 @@ CREATE TABLE data_provider(
 	name VARCHAR(255),
 	`status` INT,
 	`code` VARCHAR(255),
-	scope INT,
+	scope VARCHAR(255),
 	query_url TEXT
 );

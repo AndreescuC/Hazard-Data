@@ -60,9 +60,9 @@ class WarningRepository extends EntityRepository
             ->select('count(w.id)')
             ->where('w.status IN (:confirmed)')
             ->andWhere('w.extId LIKE :userOriginated')
-            ->andWhere('cu.registerDate < :before')
+            ->andWhere('w.dateCreated< :before')
             ->setParameter('confirmed', [Warning::STATUS_CONFIRMED_TRIGGER, Warning::STATUS_CONFIRMED])
-            ->setParameter('before', !is_null($before) ?: new \DateTime())
+            ->setParameter('before', ($before ?: new \DateTime()))
             ->setParameter('userOriginated', 'user%');
 
         if ($after instanceof \DateTime) {
@@ -77,9 +77,9 @@ class WarningRepository extends EntityRepository
     {
         $qb = $this->getQueryBuilder()
             ->select('count(w.id)')
-            ->andWhere('w.extId LIKE :userOriginated')
-            ->andWhere('cu.registerDate < :before')
-            ->setParameter('before', !is_null($before) ?: new \DateTime())
+            ->where('w.extId LIKE :userOriginated')
+            ->andWhere('w.dateCreated < :before')
+            ->setParameter('before', ($before ?: new \DateTime()))
             ->setParameter('userOriginated', 'user%');
 
         if ($after instanceof \DateTime) {

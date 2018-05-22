@@ -51,8 +51,6 @@ class StatisticsService
             'byDay' => $this->getWeeklyStatisticsByDay([$this->clientRepo, 'countUsersByTimeFrame'])
         ];
 
-        $statistics['logins'] = 10;
-
         $statistics['user_warnings'] = [
             'total' => $this->warningRepo->countUserWarningsByTimeFrame($aWeekAgo),
             'byDay' => $this->getWeeklyStatisticsByDay([$this->warningRepo, 'countUserWarningsByTimeFrame'])
@@ -73,6 +71,8 @@ class StatisticsService
 
     private function getWeeklyStatisticsByDay(array $callback): array
     {
+        $daysOfTheWeek = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
+
         $startOfDay = new \DateTime();
         $endOfDay = new \DateTime();
         $startOfDay->sub(new \DateInterval('P7D'));
@@ -81,7 +81,7 @@ class StatisticsService
         $statistics = [];
         $oneDayInterval = new \DateInterval('P1D');
         for ($i=0; $i<7; $i++) {
-            $statistics[] = call_user_func_array($callback, [$startOfDay, $endOfDay]);
+            $statistics[$daysOfTheWeek[$i]] = call_user_func_array($callback, [$startOfDay, $endOfDay]);
             $startOfDay->add($oneDayInterval);
             $endOfDay->add($oneDayInterval);
         }
