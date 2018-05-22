@@ -14,8 +14,8 @@ class DataProvider
     const STATUS_ACTIVE = 1;
     const STATUS_INACTIVE = 2;
 
-    const SCOPE_EARTHQUAKE = 1;
-    const SCOPE_WEATHER = 2;
+    const SCOPE_EARTHQUAKE = "Earthquakes";
+    const SCOPE_WEATHER = "Weather";
 
     /**
      * @ORM\Id
@@ -43,8 +43,8 @@ class DataProvider
     private $code;
 
     /**
-     * @var int
-     * @ORM\Column(type="integer", name="scope")
+     * @var string
+     * @ORM\Column(type="string", name="scope")
      */
     private $scope;
 
@@ -95,17 +95,17 @@ class DataProvider
     }
 
     /**
-     * @return int
+     * @return string
      */
-    public function getScope(): int
+    public function getScope(): string
     {
         return $this->scope;
     }
 
     /**
-     * @param int $scope
+     * @param string $scope
      */
-    public function setScope(int $scope)
+    public function setScope(string $scope)
     {
         $this->scope = $scope;
     }
@@ -126,5 +126,19 @@ class DataProvider
         $this->queryURL = $queryURL;
     }
 
+    /**
+     * @return int
+     */
+    public function getStatus(): int
+    {
+        return $this->status;
+    }
 
+    /**
+     * @param int $status
+     */
+    public function setStatus(int $status)
+    {
+        $this->status = $status;
+    }
 }

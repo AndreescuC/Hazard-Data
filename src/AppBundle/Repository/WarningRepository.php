@@ -37,25 +37,56 @@ class WarningRepository extends EntityRepository
         return $qb->getQuery()->getResult();
     }
 
-    public function countUserConfirmedWarnings(): int
+    public function countApiConfirmedWarningsByTimeFrame(\DateTime $after = null): int
     {
-        $qb = $this->getQueryBuilder()
-            ->select('count(w.id)')
+        $qb = $this->getQueryBuilder();
+        $qb ->select('count(w.id)')
             ->where('w.status IN (:confirmed)')
-            ->setParameter('confirmed', [Warning::STATUS_CONFIRMED_TRIGGER, Warning::STATUS_CONFIRMED]);
+            ->andWhere('w.extId LIKE :userOriginated')
+            ->setParameter('confirmed', [Warning::STATUS_CONFIRMED_TRIGGER, Warning::STATUS_CONFIRMED])
+            ->setParameter('userOriginated', 'user%');
+
+        if ($after instanceof \DateTime) {
+            $qb ->andWhere('w.dateCreated >= :after')
+                ->setParameter('after', $after);
+        }
 
         return $qb->getQuery()->getSingleScalarResult();
     }
 
-    public function countUserWarningsByTimeFrame(\DateTime $after, \DateTime $before = NULL): int
+    public function countUserConfirmedWarningsByTimeFrame(\DateTime $after = null, \DateTime $before = NULL): int
     {
         $qb = $this->getQueryBuilder()
             ->select('count(w.id)')
-            ->where('w.dateCreated > :after')
+            ->where('w.status IN (:confirmed)')
+            ->andWhere('w.extId LIKE :userOriginated')
+            ->andWhere('w.dateCreated< :before')
+            ->setParameter('confirmed', [Warning::STATUS_CONFIRMED_TRIGGER, Warning::STATUS_CONFIRMED])
+            ->setParameter('before', ($before ?: new \DateTime()))
+            ->setParameter('userOriginated', 'user%');
+
+        if ($after instanceof \DateTime) {
+            $qb ->andWhere('w.dateCreated >= :after')
+                ->setParameter('after', $after);
+        }
+
+        return $qb->getQuery()->getSingleScalarResult();
+    }
+
+    public function countUserWarningsByTimeFrame(\DateTime $after = null, \DateTime $before = NULL): int
+    {
+        $qb = $this->getQueryBuilder()
+            ->select('count(w.id)')
+            ->where('w.extId LIKE :userOriginated')
             ->andWhere('w.dateCreated < :before')
-            ->andWhere('w.extId like "%"')
-            ->setParameter('after', $after)
-            ->setParameter('before', !is_null($before) ?: new \DateTime());
+            ->setParameter('before', ($before ?: new \DateTime()))
+            ->setParameter('userOriginated', 'user%');
+
+        if ($after instanceof \DateTime) {
+            $qb ->andWhere('w.dateCreated >= :after')
+                ->setParameter('after', $after);
+        }
+
         return $qb->getQuery()->getSingleScalarResult();
     }
 

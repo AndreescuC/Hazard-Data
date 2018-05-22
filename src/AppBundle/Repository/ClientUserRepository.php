@@ -33,7 +33,7 @@ class ClientUserRepository extends EntityRepository
             ->where('cu.registerDate > :after')
             ->andWhere('cu.registerDate < :before')
             ->setParameter('after', $after)
-            ->setParameter('before', !is_null($before) ?: new \DateTime());
+            ->setParameter('before', ($before ?: new \DateTime()));
         return $qb->getQuery()->getSingleScalarResult();
     }
 
