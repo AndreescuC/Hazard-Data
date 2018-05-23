@@ -30,7 +30,7 @@ class WarningRepository extends EntityRepository
     {
         $qb = $this->getQueryBuilder()
             ->where('w.hazard = :hazard')
-            ->andWhere('w.status = : :status')
+            ->andWhere('w.status = :status')
             ->setParameter('hazard', $hazard)
             ->setParameter('status', $status);
 

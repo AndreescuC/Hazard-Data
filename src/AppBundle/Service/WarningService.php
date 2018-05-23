@@ -5,6 +5,7 @@ namespace AppBundle\Service;
 use AppBundle\Entity\AppConfig;
 use AppBundle\Entity\ClientUser;
 use AppBundle\Entity\Hazard;
+use AppBundle\Entity\Parameters;
 use AppBundle\Entity\Warning;
 use AppBundle\Event\WarningConfirmedEvent;
 use AppBundle\Event\WarningSubscriber;
@@ -22,15 +23,10 @@ class WarningService
     const NOTIFICATION_TITLE = "%s Warning!";
     const NOTIFICATION_BODY = "A new %s warning has been issued at coordinates [%f, %f]";
 
-    private $serverKey;
-
     private $doctrine;
 
-    private $appConfigService;
-
-    public function __construct(string $serverKey, ManagerRegistry $doctrine, AppConfigService $appConfigService)
+    public function __construct(ManagerRegistry $doctrine, AppConfigService $appConfigService)
     {
-        $this->serverKey = $serverKey;
         $this->doctrine = $doctrine;
         $this->appConfigService = $appConfigService;
     }
@@ -103,7 +99,7 @@ class WarningService
     private function initializeFirebaseClient(): Client
     {
         $client = new Client();
-        $client->setApiKey($this->serverKey);
+        $client->setApiKey($this->appConfigService->getServerKey());
         $client->injectGuzzleHttpClient(new \GuzzleHttp\Client());
 
         return $client;
@@ -145,7 +141,6 @@ class WarningService
                 $warning->setGravity($gravity);
             }
         }
-        //TODO: replace with $this->resolveWarningStatus($warning)
         $warning->setStatus($this->resolveWarningStatus($warning));
 
         $em = $this->getManager();
@@ -161,7 +156,7 @@ class WarningService
         }
 
         $pendingWarnings = $this->getWarningInstancesByStatus($warning, Warning::STATUS_PENDING);
-        $trustThreshold = $this->appConfigService->getConfigByName(AppConfig::CONFIG_TRUST_THRESHOLD);
+        $trustThreshold = $this->appConfigService->getTrustThreshold();
         $trustLevel = $warning->getTrustLevel();
 
         /** @var Warning $pendingWarning */
@@ -174,7 +169,7 @@ class WarningService
 
                 $dispatcher = new EventDispatcher();
                 $dispatcher->addSubscriber(new WarningSubscriber($this->doctrine, $this));
-                $dispatcher->dispatch($event);
+                $dispatcher->dispatch(WarningConfirmedEvent::NAME, $event);
 
                 return Warning::STATUS_CONFIRMED;
             }
@@ -188,7 +183,7 @@ class WarningService
         $repo = $this->getManager()->getRepository(Warning::class);
         $matchingWarnings = $repo->getEntriesByStatusAndHazard($warning->getHazard(), $status);
 
-        $radius = $this->appConfigService->getConfigByName(AppConfig::CONFIG_RADIUS);
+        $radius = $this->appConfigService->getWarningRadius();
 
         $proximityWarnings = [];
         /** @var Warning $matchingWarning */

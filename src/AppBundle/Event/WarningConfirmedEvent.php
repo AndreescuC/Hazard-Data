@@ -7,7 +7,7 @@ use Symfony\Component\EventDispatcher\Event;
 
 class WarningConfirmedEvent extends Event
 {
-    const NAME = 'warning.confimed';
+    const NAME = 'warning.confirmed';
 
     private $confirmedWarning;
 

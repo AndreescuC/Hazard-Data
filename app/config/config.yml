@@ -11,8 +11,6 @@ parameters:
     client_security.api_key.generation_max_value: 200000
     client_security.api_key.generation_max_attempts: 10000
 
-    firebase.server_key: '2ewf32f2'
-
 
 framework:
     #esi: ~

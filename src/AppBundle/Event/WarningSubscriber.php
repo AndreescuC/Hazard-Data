@@ -22,13 +22,16 @@ class WarningSubscriber implements EventSubscriberInterface
 
     public static function getSubscribedEvents()
     {
-        return array(
+        return [
             WarningConfirmedEvent::NAME => 'onWarningConfirmation',
-        );
+        ];
     }
 
-    public function onWarningConfirmation(WarningConfirmedEvent $event): void
+    public function onWarningConfirmation($event): void
     {
+        if (!$event instanceof WarningConfirmedEvent) {
+            return ;
+        }
         $warnings = $event->getConfirmedWarningSiblings();
         $triggerWarning = $event->getConfirmedWarning();
         /** @var WarningRepository $repo */

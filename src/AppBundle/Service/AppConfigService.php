@@ -3,6 +3,7 @@
 namespace AppBundle\Service;
 
 use AppBundle\Entity\AppConfig;
+use AppBundle\Entity\Parameters;
 use AppBundle\Repository\AppConfigRepository;
 use Doctrine\Common\Persistence\ManagerRegistry;
 
@@ -13,11 +14,6 @@ class AppConfigService
     public function __construct(ManagerRegistry $doctrine)
     {
         $this->doctrine = $doctrine;
-    }
-
-    public function getConfigByName(string $name): mixed
-    {
-        return $this->getConfigRepository()->findOneBy(['name' => $name]);
     }
 
     /**
@@ -51,8 +47,29 @@ class AppConfigService
         return $angle * $earthRadius;
     }
 
-    private function getConfigRepository(): AppConfigRepository
+    public function getTrustThreshold(): float
     {
-        return $this->doctrine->getRepository(AppConfig::class);
+        $params = $this->getConfigRepository()->findAll();
+
+        return isset($params[0]) ? $params[0]->getWarningTolerance() : 100;
+    }
+
+    public function getServerKey(): string
+    {
+        $params = $this->getConfigRepository()->findAll();
+
+        return isset($params[0]) ? $params[0]->getFirabaseServerKey() : 'xxxxx';
+    }
+
+    public function getWarningRadius(): float
+    {
+        $params = $this->getConfigRepository()->findAll();
+
+        return isset($params[0]) ? $params[0]->getWarningRadius() : 1000;
+    }
+
+    private function getConfigRepository()
+    {
+        return $this->doctrine->getRepository(Parameters::class);
     }
 }
